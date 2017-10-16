@@ -28,8 +28,8 @@ include .misc/make/misc_var
 
 ## Te `.SILENT` launche evrything specified in
 ## silent mode so you dont have to put the `@`
-.SILENT	: __START NAME clean fclean all re object library os_dep
-.PHONY	: __START NAME clean fclean all re object library os_dep
+.SILENT	: __START	NAME	clean fclean all re object library os_dep
+.PHONY	: __START			clean fclean all re object library os_dep
 
 
 ## This is launched if no param given
@@ -73,6 +73,10 @@ OBJ_P	=	$(addprefix $(P_OBJ)/,$(OBJ))	## addprefix add the
 __START:
 	 printf "$(OK)[+][$(PROJECT)] Done$(C_DEF)"
 
+## For multiple Binarys
+all :
+	echo all
+
 $(NAME):	library
 
 ## Clean objects and others
@@ -98,15 +102,15 @@ object:		$(SRC) $(P_SRC) $(P_OBJ)
 	$(foreach SOURCE ,$(SRC), \
 		$(CC) $(CC_FLAG) -c $(SOURCE) -o $(P_OBJ)/$(notdir $(SOURCE:.c=.o))	&& \
 		printf "$(OK)[+][$(PROJECT)] $(SOURCE)$(C_DEF)" && sleep $(SLEEP)	&& \
-		printf "\r" \
+		printf "$(E_CLEAR_LINE)" \
 	;)
 	echo 	-e "$(OK)[+][$(PROJECT)] Objects are made in ./$(P_OBJ)$(C_DEF)"
 
 ## Make the actual library (archive)
 library:	object $(P_OBJ) $(OBJ_P)
-	echo 	-e "$(WARN)[!][$(PROJECT)] Creating archive $(LIB_A)$(OS_CHK)"
+	echo 	-e "$(WARN)[!][$(PROJECT)] Creating archive $(LIB_A)$(C_DEF)"
 	@ar rc $(LIB_A) $(OBJ_P)
-	echo 	-e "$(WARN)[!][$(PROJECT)] Generating index in $(LIB_A)$(OS_CHK)"
+	echo 	-e "$(WARN)[!][$(PROJECT)] Generating index in $(LIB_A)$(C_DEF)"
 	@ranlib $(LIB_A)
 	echo 	-e "$(OK)[+][$(PROJECT)] The $(LIB_A) library was made$(C_DEF)"
 

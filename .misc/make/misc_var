@@ -33,9 +33,12 @@ OS_CHK		:=	$(shell /bin/sh -c "[ ! -f $(P_MISC)/os ] || cat $(P_MISC)/os")
 
 
 ## other information and functionality
-SLEEP	?=	0.25	## This value is used to sleep
+SLEEP	?=	0.10	## This value is used to sleep
 					## the shell for a certain second.
 					## For decoration purpose
+
+## E stands dor escape code
+E_CLEAR_LINE = \r\033[K
 
 ## The following variables are default if undifined
 

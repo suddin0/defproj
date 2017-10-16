@@ -13,6 +13,11 @@ magenta	?=	\e[38;5;198m	## Light strange
 violet	?=	\e[38;5;171m	## Havy strange
 purple	?=	\e[38;5;165m	## Too strange
 
+
+## We are not using the color variable directly
+## because they cause truble when printing in terminal.
+## So we are manually puting the color codes
+
 C_DEF	?= 	\e[38;5;15m
 OK		?=	\e[38;5;47m
 WARN 	?=	\e[38;5;208m
