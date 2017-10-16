@@ -61,12 +61,7 @@ LIB_A	?=	one.a
 
 ## sources and objects where path names are removed.
 ## Add all your source files to this variable
-SRC		=	src/a.c \
-			src/b.c \
-			src/c.c \
-			src/d.c \
-			src/e.c \
-			src/f.c
+SRC		=
 
 ## Objects without path names
 OBJ		:=	$(notdir $(SRC:.c=.o))
