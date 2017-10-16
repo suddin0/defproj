@@ -17,13 +17,13 @@ SRC_W		?=	$(shell find $(P_SRC) | grep \\.c$)
 
 ## Does the same job but for object files from `P_OBJ` path
 
-SRC_W		?=	$(shell find $(P_OBJ) | grep \\.o$)
+OBJ_W		?=	$(shell find $(P_OBJ) | grep \\.o$)
 
 ## This will get the information about the operating system
 ## so if the previous compilation differ or if some other rules
 ## ware set then it will do accordingly
 
-MY_OS		:=	$(shell uname -s)
+MY_OS		:=	$(shell uname -ms)
 
 ## If the file os do not exists then wont be read
 ## else it will get the content of the file.
