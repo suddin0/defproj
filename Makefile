@@ -36,7 +36,7 @@ include .misc/make/misc_var
 .DEFAULT_GOAL = __START
 
 ## Project name (will be used)
-PROJECT =
+PROJECT	=	PROJECT
 
 ## compiler related
 CC		?=	clang 		## default compiler is clang
@@ -76,21 +76,21 @@ OBJ_P	=	$(addprefix $(P_OBJ)/,$(OBJ))	## addprefix add the
 											## path name to the files...
 ## Start making here
 __START:
-	 printf "$(OK)[+] Done$(C_DEF)"
+	 printf "$(OK)[+][$(PROJECT)] Done$(C_DEF)"
 
 $(NAME):	library
 
 ## Clean objects and others
 clean:		$(OBJ_P)
 	rm		-f	$(OBJ_P)
-	echo	-e	"$(WARN)[!] Removed all objects from ./$(P_OBJ)$(C_DEF)"
-	echo	-e	"$(OK)[+] Cleaned$(C_DEF)"
+	echo	-e	"$(WARN)[!][$(PROJECT)] Removed all objects from ./$(P_OBJ)$(C_DEF)"
+	echo	-e	"$(OK)[+][$(PROJECT)] Cleaned$(C_DEF)"
 
 ## Cleans everything
 fclean:		clean
 	rm		-f	$(OBJ_W)
-	echo	-e	"$(WARN)[!] Removed all binary ./$(P_BIN)$(C_DEF)"
-	echo	-e	"$(OK)[+] Fully cleaned$(C_DEF)"
+	echo	-e	"$(WARN)[!][$(PROJECT)] Removed all binary ./$(P_BIN)$(C_DEF)"
+	echo	-e	"$(OK)[+][$(PROJECT)] Fully cleaned$(C_DEF)"
 
 re:			fclean all
 
@@ -102,18 +102,18 @@ re:			fclean all
 object:		$(SRC) $(P_SRC) $(P_OBJ)
 	$(foreach SOURCE ,$(SRC), \
 		$(CC) $(CC_FLAG) -c $(SOURCE) -o $(P_OBJ)/$(notdir $(SOURCE:.c=.o))	&& \
-		printf "$(OK)[+] $(SOURCE)$(C_DEF)" && sleep $(SLEEP)	&& \
+		printf "$(OK)[+][$(PROJECT)] $(SOURCE)$(C_DEF)" && sleep $(SLEEP)	&& \
 		printf "\r" \
 	;)
-	echo 	-e "$(OK)[+] Objects are made in ./$(P_OBJ)$(C_DEF)"
+	echo 	-e "$(OK)[+][$(PROJECT)] Objects are made in ./$(P_OBJ)$(C_DEF)"
 
 ## Make the actual library (archive)
 library:	object $(P_OBJ) $(OBJ_P)
-	echo 	-e "$(WARN)[!] Creating archive $(LIB_A)$(OS_CHK)"
+	echo 	-e "$(WARN)[!][$(PROJECT)] Creating archive $(LIB_A)$(OS_CHK)"
 	@ar rc $(LIB_A) $(OBJ_P)
-	echo 	-e "$(WARN)[!] Generating index in $(LIB_A)$(OS_CHK)"
+	echo 	-e "$(WARN)[!][$(PROJECT)] Generating index in $(LIB_A)$(OS_CHK)"
 	@ranlib $(LIB_A)
-	echo 	-e "$(OK)[+] The $(LIB_A) library was made$(C_DEF)"
+	echo 	-e "$(OK)[+][$(PROJECT)] The $(LIB_A) library was made$(C_DEF)"
 
 
 
@@ -125,7 +125,7 @@ os_dep: #put your prerequisite for os dependent stufs
 	## this will be launched if the os name is 
 	## different then what read from the os file.
 	## ex: make re
-	echo "Os dependent stufs"
+	echo "[$(PROJECT)] Os dependent stufs"
 
 ## Useful Makefile tricks
 ##
