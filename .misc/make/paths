@@ -1,0 +1,10 @@
+## Path related
+
+P_ROOT	?=	$(shell pwd)
+P_BIN	?=	bin
+P_LIB	?=	lib
+P_OBJ	?=	obj
+P_SRC	?=	src
+P_RES	?=	res
+P_TEST	?=	test
+P_MISC	?=	.misc
