@@ -100,9 +100,9 @@ re:			fclean all
 ## but one by one.
 object:		$(SRC) $(P_SRC) $(P_OBJ)
 	$(foreach SOURCE, $(SRC), \
-		$(CC) $(CC_FLAG) -c $(SOURCE) -o $(P_OBJ)/$(notdir $(SOURCE:.c=.o))	&& \
+		$(CC) $(CC_FLAG) -I$(P_INCLUDE) -c $(SOURCE) -o $(P_OBJ)/$(notdir $(SOURCE:.c=.o))	&& \
 		printf "$(OK)[+][$(PROJECT)] $(SOURCE)$(C_DEF)" && sleep $(SLEEP)	&& \
-		printf "$(E_CLEAR_LINE)" \
+		printf "\r\033[K" \
 	;)
 	printf "$(OK)[+][$(PROJECT)] Objects are made in ./$(P_OBJ)$(C_DEF)\n"
 
