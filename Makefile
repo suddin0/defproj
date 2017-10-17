@@ -71,7 +71,7 @@ OBJ_P	=	$(addprefix $(P_OBJ)/,$(OBJ))	## addprefix add the
 											## path name to the files...
 ## Start making here
 __START:
-	 printf "$(OK)[+][$(PROJECT)] Done$(C_DEF)"
+	 printf "$(OK)[+][$(PROJECT)] Done$(C_DEF)\n"
 
 ## For multiple Binarys
 all :
@@ -82,14 +82,14 @@ $(NAME):	library
 ## Clean objects and others
 clean:		$(OBJ_P)
 	rm		-f	$(OBJ_P)
-	echo	-e	"$(WARN)[!][$(PROJECT)] Removed all objects from ./$(P_OBJ)$(C_DEF)"
-	echo	-e	"$(OK)[+][$(PROJECT)] Cleaned$(C_DEF)"
+	printf	"$(WARN)[!][$(PROJECT)] Removed all objects from ./$(P_OBJ)$(C_DEF)\n"
+	printf	"$(OK)[+][$(PROJECT)] Cleaned$(C_DEF)\n"
 
 ## Cleans everything
 fclean:		clean
 	rm		-f	$(OBJ_W)
-	echo	-e	"$(WARN)[!][$(PROJECT)] Removed all binary ./$(P_BIN)$(C_DEF)"
-	echo	-e	"$(OK)[+][$(PROJECT)] Fully cleaned$(C_DEF)"
+	printf	"$(WARN)[!][$(PROJECT)] Removed all binary ./$(P_BIN)$(C_DEF)\n"
+	printf	"$(OK)[+][$(PROJECT)] Fully cleaned$(C_DEF)\n"
 
 re:			fclean all
 
@@ -99,20 +99,20 @@ re:			fclean all
 ## not gives al the names in the same time to gcc
 ## but one by one.
 object:		$(SRC) $(P_SRC) $(P_OBJ)
-	$(foreach SOURCE ,$(SRC), \
+	$(foreach SOURCE, $(SRC), \
 		$(CC) $(CC_FLAG) -c $(SOURCE) -o $(P_OBJ)/$(notdir $(SOURCE:.c=.o))	&& \
 		printf "$(OK)[+][$(PROJECT)] $(SOURCE)$(C_DEF)" && sleep $(SLEEP)	&& \
 		printf "$(E_CLEAR_LINE)" \
 	;)
-	echo 	-e "$(OK)[+][$(PROJECT)] Objects are made in ./$(P_OBJ)$(C_DEF)"
+	printf "$(OK)[+][$(PROJECT)] Objects are made in ./$(P_OBJ)$(C_DEF)\n"
 
 ## Make the actual library (archive)
 library:	object $(P_OBJ) $(OBJ_P)
-	echo 	-e "$(WARN)[!][$(PROJECT)] Creating archive $(LIB_A)$(C_DEF)"
+	printf "$(WARN)[!][$(PROJECT)] Creating archive $(LIB_A)$(C_DEF)\n"
 	@ar rc $(LIB_A) $(OBJ_P)
-	echo 	-e "$(WARN)[!][$(PROJECT)] Generating index in $(LIB_A)$(C_DEF)"
+	printf "$(WARN)[!][$(PROJECT)] Generating index in $(LIB_A)$(C_DEF)\n"
 	@ranlib $(LIB_A)
-	echo 	-e "$(OK)[+][$(PROJECT)] The $(LIB_A) library was made$(C_DEF)"
+	printf "$(OK)[+][$(PROJECT)] The $(LIB_A) library was made$(C_DEF)\n"
 
 
 
@@ -124,7 +124,7 @@ os_dep: #put your prerequisite for os dependent stufs
 	## this will be launched if the os name is 
 	## different then what read from the os file.
 	## ex: make re
-	echo "[$(PROJECT)] Os dependent stufs"
+	printf "[$(PROJECT)] Os dependent stufs\n"
 
 ## Useful Makefile tricks
 ##
