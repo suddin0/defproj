@@ -74,10 +74,11 @@ __START:
 	 printf "$(OK)[+][$(PROJECT)] Done$(C_DEF)\n"
 
 ## For multiple Binarys
-all :
+all : $(NAME)
 	echo all
 
-$(NAME):	library
+$(NAME):	$(SRC)
+	@make library --no-print-directory
 
 ## Clean objects and others
 clean:		$(OBJ_P)
