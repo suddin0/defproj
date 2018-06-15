@@ -40,6 +40,7 @@ PROJECT	=	PROJECT
 
 ## compiler related
 CC		?=	clang 		## default compiler is clang
+
 CC_FLAG ?=	-Werror \
 			-Wall	\
 			-Wextra
