@@ -59,6 +59,12 @@ NAME	?=	one 		## The name of your binary
 #The name of the library you want to make
 LIB_A	?=	one.a
 
+#All LIB_FT stufs
+LIBFT		= $(P_LIB)/libft
+LIBFT_INC	= $(LIBFT)/include
+LIBFT_LIB	= $(LIBFT)/lib
+LIBFT_A		= $(LIBFT_LIB)/libft.a
+FT_PRINTF_A	= $(LIBFT_LIB)/libftprintf.a
 
 ## sources and objects where path names are removed.
 ## Add all your source files to this variable
