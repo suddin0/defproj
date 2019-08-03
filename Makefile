@@ -65,6 +65,8 @@ LIBFT_INC	= $(LIBFT)/include
 LIBFT_LIB	= $(LIBFT)/lib
 LIBFT_A		= $(LIBFT_LIB)/libft.a
 FT_PRINTF_A	= $(LIBFT_LIB)/libftprintf.a
+FT_PRINTF_ERR_A	= $(LIBFT_LIB)/libftprintferr.a
+LIBFT_FLAGS = -I $(LIBFT_INC) -L $(LIBFT_LIB) -lft # You can also add -lftprintf -lftprintferr
 
 ## sources and objects where path names are removed.
 ## Add all your source files to this variable
@@ -74,7 +76,7 @@ SRC		=
 OBJ		:=	$(notdir $(SRC:.c=.o))
 
 ## Objects with their path name
-OBJ_P	=	$(addprefix $(P_OBJ)/,$(OBJ))	## addprefix add the 
+OBJ_P	=	$(addprefix $(P_OBJ)/,$(OBJ))	## addprefix add the
 											## path name to the files...
 ## Start making here
 __START:
@@ -86,6 +88,17 @@ all : $(NAME)
 
 $(NAME):	$(SRC)
 	@make library --no-print-directory
+
+#Default library related
+$(LIBFT_A):
+	make -C $(LIBFT)
+
+$(FT_PRINTF_A):
+	make -C $(LIBFT) ft_printf
+
+$(FT_PRINTF_ERR_A):
+	make -C $(LIBFT) ft_printf_err
+
 
 ## Clean objects and others
 clean:		$(OBJ_P)
@@ -129,7 +142,7 @@ library:	object $(P_OBJ) $(OBJ_P)
 ## os has been detected
 os_dep: #put your prerequisite for os dependent stufs
 	## put your os dependent comands here
-	## this will be launched if the os name is 
+	## this will be launched if the os name is
 	## different then what read from the os file.
 	## ex: make re
 	printf "[$(PROJECT)] Os dependent stufs\n"
