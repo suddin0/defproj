@@ -57,7 +57,7 @@ MAIN	?=	$(P_SRC)/main.c
 NAME	?=	$(PROJECT) 		## The name of your binary
 
 #The name of the library you want to make
-LIB_A	?=	one.a
+LIB_A	?=	$(PROJECT).a
 
 #All LIB_FT stufs
 LIBFT		= $(P_LIB)/libft
