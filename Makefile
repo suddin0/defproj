@@ -41,7 +41,7 @@ PROJECT	=	PROJECT
 ## compiler related
 CC		?=	clang 		## default compiler is clang
 
-CC_FLAG ?=	-Werror \
+CFLAGS	?=	-Werror \
 			-Wall	\
 			-Wextra
 
@@ -53,8 +53,8 @@ CC_FLAG ?=	-Werror \
 
 
 ## binary, library etc...
-MAIN	?=	main.c
-NAME	?=	one 		## The name of your binary
+MAIN	?=	$(P_SRC)/main.c
+NAME	?=	$(PROJECT) 		## The name of your binary
 
 #The name of the library you want to make
 LIB_A	?=	one.a
@@ -70,24 +70,35 @@ LIBFT_FLAGS = -I $(LIBFT_INC) -L $(LIBFT_LIB) -lft # You can also add -lftprintf
 
 ## sources and objects where path names are removed.
 ## Add all your source files to this variable
-SRC		=
+SRC		=		$(MAIN)					\
+				#Add other source files here...	\
+				#$(P_SRC)/<yourfile>.c	\
+
 
 ## Objects without path names
-OBJ		:=	$(notdir $(SRC:.c=.o))
+OBJ		:=	$(addsuffix .o, $(basename $(SRC)))
 
 ## Objects with their path name
 OBJ_P	=	$(addprefix $(P_OBJ)/,$(OBJ))	## addprefix add the
 											## path name to the files...
+
+## All header (.h) files so if they changed then all files will be recompiled
+HEADERS =	$(P_INCLUDE)/main.h
+
 ## Start making here
-__START:
-	 printf "$(OK)[+][$(PROJECT)] Done$(C_DEF)\n"
+__START: os_dep
+	 @make all --no-print-directory
 
 ## For multiple Binarys
 all : $(NAME)
-	echo all
 
-$(NAME):	$(SRC)
-	@make library --no-print-directory
+
+$(NAME): $(OBJ)
+	@$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
+
+## Compiles any object file that is added as dependency
+%.o: %.c $(HEADERS)
+	$(CC) $(CFLAGS) -I $(P_INCLUDE) -c -o  $@ $<
 
 #Default library related
 $(LIBFT_A):
@@ -101,39 +112,18 @@ $(FT_PRINTF_ERR_A):
 
 
 ## Clean objects and others
-clean:		$(OBJ_P)
-	rm		-f	$(OBJ_P)
+clean:
+	rm		-f	$(OBJ)
 	printf	"$(WARN)[!][$(PROJECT)] Removed all objects from ./$(P_OBJ)$(C_DEF)\n"
 	printf	"$(OK)[+][$(PROJECT)] Cleaned$(C_DEF)\n"
 
 ## Cleans everything
 fclean:		clean
-	rm		-f	$(OBJ_W)
+	rm		-f	$(NAME)
 	printf	"$(WARN)[!][$(PROJECT)] Removed all binary ./$(P_BIN)$(C_DEF)\n"
 	printf	"$(OK)[+][$(PROJECT)] Fully cleaned$(C_DEF)\n"
 
 re:			fclean all
-
-## This function creat object files from sources.
-## It treates the string of large source names as
-## individual names, when it creat objects it do
-## not gives al the names in the same time to gcc
-## but one by one.
-object:		$(SRC) $(P_SRC) $(P_OBJ)
-	$(foreach SOURCE, $(SRC), \
-		$(CC) $(CC_FLAG) -I$(P_INCLUDE) -c $(SOURCE) -o $(P_OBJ)/$(notdir $(SOURCE:.c=.o))	&& \
-		printf "$(OK)[+][$(PROJECT)] $(SOURCE)$(C_DEF)" && sleep $(SLEEP)	&& \
-		printf "\r\033[K" \
-	;)
-	printf "$(OK)[+][$(PROJECT)] Objects are made in ./$(P_OBJ)$(C_DEF)\n"
-
-## Make the actual library (archive)
-library:	object $(P_OBJ) $(OBJ_P)
-	printf "$(WARN)[!][$(PROJECT)] Creating archive $(LIB_A)$(C_DEF)\n"
-	@ar rc $(LIB_A) $(OBJ_P)
-	printf "$(WARN)[!][$(PROJECT)] Generating index in $(LIB_A)$(C_DEF)\n"
-	@ranlib $(LIB_A)
-	printf "$(OK)[+][$(PROJECT)] The $(LIB_A) library was made$(C_DEF)\n"
 
 
 
@@ -145,7 +135,7 @@ os_dep: #put your prerequisite for os dependent stufs
 	## this will be launched if the os name is
 	## different then what read from the os file.
 	## ex: make re
-	printf "[$(PROJECT)] Os dependent stufs\n"
+	@printf "[$(PROJECT)] Os dependent stufs\n"
 
 ## Useful Makefile tricks
 ##
