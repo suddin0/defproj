@@ -39,9 +39,9 @@ include .misc/make/misc_var
 PROJECT	=	PROJECT
 
 ## compiler related
-CC		?=	clang 		## default compiler is clang
+CC		:=	clang ## default compiler is clang
 
-CFLAGS	?=	-Werror \
+CFLAGS	:=	-Werror \
 			-Wall	\
 			-Wextra
 
@@ -51,6 +51,20 @@ CFLAGS	?=	-Werror \
 ## -fno-omit-frame-pointer		\
 ## -fsanitize-address-use-after-scope \
 
+## If we don't want any compiler flags
+ifdef NOCCFLAGS
+	CFLAGS :=
+endif
+
+## If we want to debug then add the `SHARED=1` argument to make
+ifdef DEBUG
+	CFLAGS := $(CFLAGS)  -g
+endif
+
+## If we want to compile with sanitizer then add the `SHARED=1` argument to make
+ifdef ASAN
+	CFLAGS := $(CFLAGS) -fsanitize=address -fno-omit-frame-pointer -fsanitize-address-use-after-scope
+endif
 
 ## binary, library etc...
 MAIN	?=	$(P_SRC)/main.c
@@ -64,9 +78,8 @@ LIBFT		= $(P_LIB)/libft
 LIBFT_INC	= $(LIBFT)/include
 LIBFT_LIB	= $(LIBFT)/lib
 LIBFT_A		= $(LIBFT_LIB)/libft.a
-FT_PRINTF_A	= $(LIBFT_LIB)/libftprintf.a
-FT_PRINTF_ERR_A	= $(LIBFT_LIB)/libftprintferr.a
-LIBFT_FLAGS = -I $(LIBFT_INC) -L $(LIBFT_LIB) -lft # You can also add -lftprintf -lftprintferr
+LIBFT_FLAGS = -I $(LIBFT_INC) -L $(LIBFT_LIB) -lft
+LIBFT_MAKE_FLAGS =
 
 ## sources and objects where path names are removed.
 ## Add all your source files to this variable
@@ -86,8 +99,7 @@ OBJ_P	=	$(addprefix $(P_OBJ)/,$(OBJ))	## addprefix add the
 HEADERS =	$(P_INCLUDE)/main.h
 
 ## Start making here
-__START: os_dep
-	 @make all --no-print-directory
+__START: all
 
 ## For multiple Binarys
 all : $(NAME)
@@ -103,13 +115,6 @@ $(NAME): $(OBJ)
 #Default library related
 $(LIBFT_A):
 	make -C $(LIBFT)
-
-$(FT_PRINTF_A):
-	make -C $(LIBFT) ft_printf
-
-$(FT_PRINTF_ERR_A):
-	make -C $(LIBFT) ft_printf_err
-
 
 ## Clean objects and others
 clean:
