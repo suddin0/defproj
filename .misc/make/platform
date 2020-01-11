@@ -1,0 +1,63 @@
+## This file is an extention of the main Makefile
+##
+## This file contain information about the current platform
+
+
+## To detect the current platform verify the value of 
+## `PLATFORM` that can contain the following values
+##
+## - windows : Windows Os
+## - darwin : Mac Os
+## - linux : Linux
+## - bsd : BSD Os
+## - haiku : haiku Os
+
+
+## If you want to manage more platform please integrate
+## The detection functionality here.
+
+
+## Set this variable to `1` to block compilation if
+## Platform was not detected.
+PLATFORM_REQUIRED := 0
+
+## Get the OS Name
+ifeq ($(OS),Windows_NT)
+    # is Windows_NT on XP, 2000, 7, Vista, 10...
+    OS_NAME = Windows
+else
+    # same as "uname -s"
+    OS_NAME = $(shell uname)
+endif
+
+
+
+
+## Compare the Os name
+ifeq ($(OS_NAME),Windows)
+    PLATFORM := windows
+else ifeq ($(OS_NAME),Darwin)        # Mac OS X
+    PLATFORM := darwin
+else ifeq ($(OS_NAME),Linux)
+    PLATFORM := linux
+else ifeq ($(OS_NAME),GNU)           # Debian GNU Hurd
+    PLATFORM := linux
+else ifeq ($(OS_NAME),GNU/kFreeBSD)  # Debian kFreeBSD
+    PLATFORM := bsd
+else ifeq ($(OS_NAME),FreeBSD)
+    PLATFORM := bsd
+else ifeq ($(OS_NAME),NetBSD)
+    PLATFORM := bsd
+else ifeq ($(OS_NAME),DragonFly)
+    PLATFORM := bsd
+else ifeq ($(OS_NAME),Haiku)
+    PLATFORM := haiku
+else
+    PLATFORM := "unknown"
+    ## The following code quit makefile because the Platform
+    ## was undetectable. If you want to compile anyway then
+    ## Juste commentout the following line of code.
+    ifeq ($(PLATFORM_REQUIRED),1)
+        $(error Error : detecting platform ( OS : $(OS_NAME)))
+    endif
+endif

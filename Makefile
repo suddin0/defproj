@@ -25,6 +25,7 @@
 include .misc/make/color
 include .misc/make/paths
 include .misc/make/misc_var
+include .misc/make/platform
 
 ## Te `.SILENT` launche evrything specified in
 ## silent mode so you dont have to put the `@`
@@ -36,7 +37,7 @@ include .misc/make/misc_var
 .DEFAULT_GOAL = __START
 
 ## Project name (will be used)
-PROJECT	=	PROJECT
+PROJECT_NAME	=	PROJECT_NAME
 
 ## compiler related
 CC		:=	clang ## default compiler is clang
@@ -68,10 +69,11 @@ endif
 
 ## binary, library etc...
 MAIN	?=	$(P_SRC)/main.c
-NAME	?=	$(PROJECT) 		## The name of your binary
+## The name of your binary
+NAME	?=	$(PROJECT_NAME)
 
 #The name of the library you want to make
-LIB_A	?=	$(PROJECT).a
+LIB_A	?=	$(PROJECT_NAME).a
 
 #All LIB_FT stufs
 LIBFT		= $(P_LIB)/libft
@@ -81,11 +83,45 @@ LIBFT_A		= $(LIBFT_LIB)/libft.a
 LIBFT_FLAGS = -I $(LIBFT_INC) -L $(LIBFT_LIB) -lft
 LIBFT_MAKE_FLAGS =
 
-## sources and objects where path names are removed.
-## Add all your source files to this variable
-SRC		=		$(MAIN)					\
-				#Add other source files here...	\
-				#$(P_SRC)/<yourfile>.c	\
+
+## The following variables are used to include your source files
+##
+## We have included a simple mechanisme of platform specific source
+## compilation. To target a specific platform just put the platform
+## specific sources in the following variables
+##
+## GENERAL_SRC : Specify platform indipendent files
+## LINUX_SRC : Sources specific to Linux Platform
+## MACOS_SRC : Sources specic to MacOS (apple) platform
+## BSD_SRC : Sources specific to bsd platform
+## WINDOWS_SRC : Sources specific to windows platform
+##
+## For more platform support please see the `platform` file in
+## `./.misc/make/` path.
+
+GENERAL_SRC	=		$(MAIN)					\
+					#Add other source files here...	\
+					#$(P_SRC)/<yourfile>.c	\
+
+LINUX_SRC	=
+MACOS_SRC	=
+BSD_SRC		=
+WINDOWS_SRC	=
+
+## Here we are simply detecting the specific platform and
+## adding the platform specific sources. 
+
+ifeq ($(PLATFORM),linux)
+	SRC	:=	$(GENERAL_SRC) $(LINUX_SRC)
+else ifeq ($(PLATFORM),darwin)
+	SRC	:=	$(GENERAL_SRC) $(MACOS_SRC)
+else ifeq ($(PLATFORM),bsd)
+	SRC	:=	$(GENERAL_SRC) $(BSD_SRC)
+else ifeq ($(PLATFORM),windows)
+	SRC	:=	$(GENERAL_SRC) $(WINDOWS_SRC)
+else
+	SRC	:=	$(GENERAL_SRC)
+endif
 
 
 ## Objects without path names
@@ -114,22 +150,33 @@ $(NAME): $(OBJ)
 
 #Default library related
 $(LIBFT_A):
-	make -C $(LIBFT)
+	make -C $(LIBFT) $(LIBFT_MAKE_FLAGS) --no-print-directory
 
 ## Clean objects and others
 clean:
 	rm		-f	$(OBJ)
-	printf	"$(WARN)[!][$(PROJECT)] Removed all objects from ./$(P_OBJ)$(C_DEF)\n"
-	printf	"$(OK)[+][$(PROJECT)] Cleaned$(C_DEF)\n"
+	printf	"$(WARN)[!][$(PROJECT_NAME)] Removed all objects from ./$(P_OBJ)$(C_DEF)\n"
+	printf	"$(OK)[+][$(PROJECT_NAME)] Cleaned$(C_DEF)\n"
 
 ## Cleans everything
 fclean:		clean
 	rm		-f	$(NAME)
-	printf	"$(WARN)[!][$(PROJECT)] Removed all binary ./$(P_BIN)$(C_DEF)\n"
-	printf	"$(OK)[+][$(PROJECT)] Fully cleaned$(C_DEF)\n"
+	printf	"$(WARN)[!][$(PROJECT_NAME)] Removed all binary ./$(P_BIN)$(C_DEF)\n"
+	printf	"$(OK)[+][$(PROJECT_NAME)] Fully cleaned$(C_DEF)\n"
 
 re:			fclean all
 
+help:
+	@printf "The following targets can be used\n"
+	@printf "\n"
+	@printf "$(yellow)all$(C_DEF) : Build everything\n"
+	@printf "$(yellow)$(NAME)$(C_DEF) : Build the $(NAME) project\n"
+	@printf "$(yellow)clean$(C_DEF) : Clean all the object files\n"
+	@printf "$(yellow)fclean$(C_DEF) : Clean all object files, libraries (local) and binaries\n"
+	@printf "$(yellow)re$(C_DEF) : Rebuild the project\n"
+
+
+	
 
 
 ## This rule is called when a difference in operating sistem has been
@@ -140,7 +187,7 @@ os_dep: #put your prerequisite for os dependent stufs
 	## this will be launched if the os name is
 	## different then what read from the os file.
 	## ex: make re
-	@printf "[$(PROJECT)] Os dependent stufs\n"
+	@printf "[$(PROJECT_NAME)] Os dependent stufs\n"
 
 ## Useful Makefile tricks
 ##
