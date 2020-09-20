@@ -39,6 +39,14 @@ include .misc/make/platform
 ## Project name (will be used)
 PROJECT_NAME	=	PROJECT_NAME
 
+#All LIB_FT stufs
+LIBFT		= $(P_LIB)/libft
+LIBFT_INC	= $(LIBFT)/include
+LIBFT_LIB	= $(LIBFT)/lib
+LIBFT_A		= $(LIBFT_LIB)/libft.a
+LIBFT_FLAGS = -I $(LIBFT_INC) -L $(LIBFT_LIB) -lft
+LIBFT_MAKE_FLAGS =
+
 ## compiler related
 CC		:=	clang ## default compiler is clang
 
@@ -52,10 +60,6 @@ CFLAGS	:=	-Werror \
 ## -fno-omit-frame-pointer		\
 ## -fsanitize-address-use-after-scope \
 
-## If we don't want any compiler flags
-ifdef NOCCFLAGS
-	CFLAGS :=
-endif
 
 ## If we want to debug then add the `SHARED=1` argument to make
 ifdef DEBUG
@@ -67,6 +71,11 @@ ifdef ASAN
 	CFLAGS := $(CFLAGS) -fsanitize=address -fno-omit-frame-pointer -fsanitize-address-use-after-scope
 endif
 
+## If we don't want any compiler flags
+ifdef NOCCFLAGS
+	CFLAGS :=
+endif
+
 ## binary, library etc...
 MAIN	?=	$(P_SRC)/main.c
 ## The name of your binary
@@ -74,15 +83,6 @@ NAME	?=	$(PROJECT_NAME)
 
 #The name of the library you want to make
 LIB_A	?=	$(PROJECT_NAME).a
-
-#All LIB_FT stufs
-LIBFT		= $(P_LIB)/libft
-LIBFT_INC	= $(LIBFT)/include
-LIBFT_LIB	= $(LIBFT)/lib
-LIBFT_A		= $(LIBFT_LIB)/libft.a
-LIBFT_FLAGS = -I $(LIBFT_INC) -L $(LIBFT_LIB) -lft
-LIBFT_MAKE_FLAGS =
-
 
 ## The following variables are used to include your source files
 ##
@@ -158,6 +158,13 @@ clean:
 	printf	"$(WARN)[!][$(PROJECT_NAME)] Removed all objects from ./$(P_OBJ)$(C_DEF)\n"
 	printf	"$(OK)[+][$(PROJECT_NAME)] Cleaned$(C_DEF)\n"
 
+## Clean the libft
+clean_libft:
+	make -C $(LIBFT) clean --no-print-directory
+
+fclean_libft:
+	make -C $(LIBFT) fclean --no-print-directory
+
 ## Cleans everything
 fclean:		clean
 	rm		-f	$(NAME)
@@ -172,11 +179,10 @@ help:
 	@printf "$(yellow)all$(C_DEF) : Build everything\n"
 	@printf "$(yellow)$(NAME)$(C_DEF) : Build the $(NAME) project\n"
 	@printf "$(yellow)clean$(C_DEF) : Clean all the object files\n"
+	@printf "$(yellow)clean_libft$(C_DEF) : Clean libft\n"
+	@printf "$(yellow)fclean_libft$(C_DEF) : Fclean libft\n"
 	@printf "$(yellow)fclean$(C_DEF) : Clean all object files, libraries (local) and binaries\n"
 	@printf "$(yellow)re$(C_DEF) : Rebuild the project\n"
-
-
-	
 
 
 ## This rule is called when a difference in operating sistem has been
